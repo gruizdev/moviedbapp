@@ -5,6 +5,27 @@ export const MovieDBApi = {
     getPopularMovies : async ({ pageParam = 1 }) : Promise<IMoviesResult> => {
         const response = await fetch(`${baseUrl}/movie/popular?api_key=${apiKey}&page=${pageParam}`);
         return await response.json() as Promise<IMoviesResult>;        
+    },
+    createGuestSession : async () : Promise<string> => {
+        const response = await fetch(`${baseUrl}/authentication/guest_session/new?api_key=${apiKey}`);
+        const result = await response.json() as {success: boolean, guest_session_id: string};
+        return result.success ? result.guest_session_id : "";
+    },
+    rateMovie : async (movieId:number, sessionId:string, rate: number) : Promise<string> => {
+        const response = await fetch(`${baseUrl}/movie/${movieId}/rating?api_key=${apiKey}&guest_session_id=${sessionId}`, 
+        {
+            method: "POST",
+            headers: new Headers({"Content-Type": "string"}),
+            body: JSON.stringify({
+                value: rate
+            }),
+        });
+        const result = await response.json() as {status_code : string, status_message: string};
+        return result.status_message;
+    },
+    getRatedMovies :async (sessionId:string) : Promise<IMoviesResult> => {
+        const response = await fetch(`${baseUrl}/guest_session/${sessionId}/rated/movies?api_key=${apiKey}`);
+        return await response.json() as Promise<IMoviesResult>;        
     }
 
 };

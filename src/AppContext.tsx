@@ -7,14 +7,15 @@ import { FetchNextPageOptions, InfiniteQueryObserverResult, useInfiniteQuery } f
 export interface IAppState {
     popularMovies: IMovie[];
     searchQuery: string; 
+    searchMoviesResult: IMovie[];
     guestSessionId: string;
     ratedMovies: IMovie[];
-    fetchPopularMovies?: (options?: FetchNextPageOptions | undefined) => Promise<InfiniteQueryObserverResult<IMoviesResult, unknown>>
 }
 
 export const initialState : IAppState = {
     popularMovies: [],
     searchQuery: "",
+    searchMoviesResult: [],
     guestSessionId: "",
     ratedMovies: []    
 };
@@ -23,6 +24,10 @@ export interface IAppContext extends IAppState {
     fetchPopularMovies: (options?: FetchNextPageOptions | undefined) => Promise<InfiniteQueryObserverResult<IMoviesResult, unknown>>; 
     isFetchingPopular: boolean;
     morePagesPopular: boolean | undefined;
+    searchMovies: (options?: FetchNextPageOptions | undefined) => Promise<InfiniteQueryObserverResult<IMoviesResult, unknown>>; 
+    isFetchingSearch: boolean;
+    morePagesSearch: boolean | undefined;
+    updateSearchQuery: (query: string) => void
 }
 
 export const AppContext = createContext<IAppContext>(initialState as IAppContext);
@@ -32,12 +37,9 @@ export const AppProvider = ({children} : {children : ReactElement}) => {
     const [state, dispatch] = useReducer(AppReducer, initialState);
 
     const {
-        data,
-        isLoading,
-        isFetchingNextPage,
-        fetchNextPage,
-        hasNextPage,
-        error,
+        isFetchingNextPage : isFetchingPopular,
+        fetchNextPage : fetchPopularMovies,
+        hasNextPage : morePagesPopular,
       } = useInfiniteQuery(
         ["popularMovies"], 
         async ({ pageParam = 1 }) => {
@@ -56,15 +58,48 @@ export const AppProvider = ({children} : {children : ReactElement}) => {
             refetchOnWindowFocus: false        
         });
 
+    const {
+        isFetchingNextPage : isFetchingSearch,
+        fetchNextPage : searchMovies,
+        hasNextPage : morePagesSearch,
+        } = useInfiniteQuery(
+        ["searchMovies", state.searchQuery], 
+        async ({ pageParam = 1 }) => {
+            const result = await MovieDBApi.searchMovies(state.searchQuery, pageParam);
+            dispatch({
+                type: ACTIONS.FETCHSEARCHMOVIES,
+                payload: {movies: state.searchMoviesResult.concat(result.results)}
+            });
+            return result;
+        }, 
+        {
+            getNextPageParam: (lastPage) => {        
+            if (lastPage.page === lastPage.total_pages) return undefined;
+            return (lastPage.page + 1);
+            },
+            refetchOnWindowFocus: false        
+        });
+
+    const updateSearchQuery = (query: string) => {
+        dispatch({
+            type: ACTIONS.SEARCHMOVIE,
+            payload: {query: query}
+        });
+    }
+
     const value : IAppContext = {
         popularMovies: state.popularMovies,
         searchQuery: state.searchQuery,
+        searchMoviesResult: state.searchMoviesResult,
         guestSessionId: state.guestSessionId,
         ratedMovies: state.ratedMovies,
-        fetchPopularMovies: fetchNextPage,
-        isFetchingPopular: isFetchingNextPage,
-        morePagesPopular: hasNextPage
-
+        fetchPopularMovies: fetchPopularMovies,
+        isFetchingPopular: isFetchingPopular,
+        morePagesPopular: morePagesPopular,
+        isFetchingSearch: isFetchingSearch,
+        searchMovies: searchMovies,
+        morePagesSearch: morePagesSearch,
+        updateSearchQuery: updateSearchQuery
     };
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 

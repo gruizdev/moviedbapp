@@ -27,8 +27,9 @@ export const AppReducer = (state: IAppState, action: IAppAction) : IAppState => 
         case ACTIONS.CREATEGUESTSESSION:
             return {...state, guestSessionId: (action.payload as ICreateGuestSessionPayload).sessionId};
         case ACTIONS.SEARCHMOVIE:
-            return {...state, searchQuery: (action.payload as ISearchPayload).query}
-
+            return {...state, searchQuery: (action.payload as ISearchPayload).query};
+        case ACTIONS.FETCHSEARCHMOVIES:
+            return {...state, searchMoviesResult: (action.payload as IFetchMoviesPayload).movies};
         default:
             return state;            
     }
@@ -38,5 +39,6 @@ export const ACTIONS = {
     FETCHPOPULARMOVIES: 'FETCHPOPULARMOVIES',
     FETCHRATEDMOVIES: 'FETCHRATEDMOVIES',
     CREATEGUESTSESSION: 'CREATEGUESTSESSION',
-    SEARCHMOVIE: 'SEARCHMOVIE'
+    SEARCHMOVIE: 'SEARCHMOVIE',
+    FETCHSEARCHMOVIES: 'FETCHSEARCHMOVIES'
 }

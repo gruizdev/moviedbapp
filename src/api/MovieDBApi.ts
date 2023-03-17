@@ -6,6 +6,13 @@ export const MovieDBApi = {
         const response = await fetch(`${baseUrl}/movie/popular?api_key=${apiKey}&page=${pageParam}`);
         return await response.json() as Promise<IMoviesResult>;        
     },
+    searchMovies : async (query:string, page: number) : Promise<IMoviesResult> => {
+        if(query){
+            const response = await fetch(`${baseUrl}/search/movie?api_key=${apiKey}&query=${query}&page=${page}`);
+            return await response.json() as Promise<IMoviesResult>;
+        }
+        return Promise.resolve({page: 0, results: [], total_pages: 0, total_results: 0});
+    },
     createGuestSession : async () : Promise<string> => {
         const response = await fetch(`${baseUrl}/authentication/guest_session/new?api_key=${apiKey}`);
         const result = await response.json() as {success: boolean, guest_session_id: string};

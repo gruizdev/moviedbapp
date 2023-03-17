@@ -1,9 +1,8 @@
-import React from 'react';
 import './App.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { MoviesList } from './components/MoviesList';
-import { IMovie } from './api/MovieDBApi';
 import { AppProvider } from './AppContext';
+import { PopularMovies } from './pages/PopularMovies';
+import { SearchMovies } from './pages/SearchMovies';
 
 const queryClient = new QueryClient();
 
@@ -11,7 +10,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
-          <MoviesList />      
+          {/* <PopularMovies /> */}
+          <SearchMovies />      
       </AppProvider>
     </QueryClientProvider>
 

@@ -3,7 +3,7 @@ import { IAppState } from './AppContext';
 
 export interface IAppAction {
     type: string;
-    payload: IFetchMoviesPayload | ICreateGuestSessionPayload | ISearchPayload;
+    payload: IFetchMoviesPayload | ICreateGuestSessionPayload | ISearchPayload | IRateMoviePayload;
 }
 
 export interface IFetchMoviesPayload {
@@ -18,6 +18,11 @@ export interface ISearchPayload {
     query: string;
 }
 
+export interface IRateMoviePayload {
+    idMovie: number;
+    rating: number;
+}
+
 export const AppReducer = (state: IAppState, action: IAppAction) : IAppState => {
     switch(action.type) {
         case ACTIONS.FETCHPOPULARMOVIES:
@@ -30,6 +35,13 @@ export const AppReducer = (state: IAppState, action: IAppAction) : IAppState => 
             return {...state, searchQuery: (action.payload as ISearchPayload).query};
         case ACTIONS.FETCHSEARCHMOVIES:
             return {...state, searchMoviesResult: (action.payload as IFetchMoviesPayload).movies};
+        case ACTIONS.RATEMOVIE:
+            const payload = action.payload as IRateMoviePayload;
+            const ratings = [
+                ...state.myRatings.filter(x => x.idMovie !== payload.idMovie),
+                {idMovie: payload.idMovie, rating: payload.rating}
+            ];
+            return {...state, myRatings: ratings};
         default:
             return state;            
     }
@@ -40,5 +52,6 @@ export const ACTIONS = {
     FETCHRATEDMOVIES: 'FETCHRATEDMOVIES',
     CREATEGUESTSESSION: 'CREATEGUESTSESSION',
     SEARCHMOVIE: 'SEARCHMOVIE',
-    FETCHSEARCHMOVIES: 'FETCHSEARCHMOVIES'
+    FETCHSEARCHMOVIES: 'FETCHSEARCHMOVIES',
+    RATEMOVIE: 'RATEMOVIE'
 }

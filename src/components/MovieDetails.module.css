@@ -1,5 +1,8 @@
 .details {
     padding: 10px;
     text-align: center;
+}
+
+.container {
     max-width: 60%;
 }

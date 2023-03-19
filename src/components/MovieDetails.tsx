@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './MovieDetails.module.css';
-import { DefaultButton, Dialog, DialogFooter, Modal, PrimaryButton } from "@fluentui/react";
+import { DefaultButton, Dialog, DialogFooter, Modal, PrimaryButton, Stack } from "@fluentui/react";
 import { Rating, RatingSize } from "@fluentui/react/lib/Rating";
 import { IMovie } from "../api/MovieDBApi";
 import { AppContext } from '../AppContext';
@@ -9,7 +9,7 @@ import { AppContext } from '../AppContext';
 export const MovieDetails = ({movie, closeModal}:{movie:IMovie, closeModal:()=>void}) => {
 
     const { myRatings, rateMovie } = React.useContext(AppContext);
-    const myRating = myRatings.find(x => x.idMovie === movie.id)?.idMovie;
+    const myRating = myRatings.find(x => x.idMovie === movie.id)?.rating;
 
     const [isRating, setIsRating] = React.useState(false);
     const [rating, setRating] = React.useState<number | undefined>(myRating);
@@ -29,9 +29,9 @@ export const MovieDetails = ({movie, closeModal}:{movie:IMovie, closeModal:()=>v
             isOpen={true}
             isBlocking={false}
             onDismiss={closeModal}
-            className={styles.detail}
+            containerClassName={styles.container}
         >
-            <div>
+            <div className={styles.details}>
                 <h2>{movie.title}</h2>
                 <p>{movie.overview}</p>
                 {
@@ -45,23 +45,18 @@ export const MovieDetails = ({movie, closeModal}:{movie:IMovie, closeModal:()=>v
                             onChange={(_, rate) => setRating(rate)}
                             rating={rating}
                         />
-                        {
-                            myRating !== rating ?
-                            <DefaultButton onClick={rate}>Send</DefaultButton>
-                            : null
-                        }
-                        <DefaultButton onClick={()=>setIsRating(false)}>Cancel</DefaultButton>
-                        {/* <Dialog                            
-                            hidden={!isConfirming}
-                            onDismiss={()=>setIsConfirming(false)}
-                            // dialogContentProps={dialogContentProps}
-                            // modalProps={modalProps}
+                        <Stack 
+                            horizontal 
+                            horizontalAlign='center'
+                            tokens={{childrenGap:10}}
                         >
-                            <DialogFooter>
-                                <PrimaryButton onClick={rateMovie} text="Confirm" />
-                                <DefaultButton onClick={()=>setIsConfirming(false)} text="Cancel" />
-                            </DialogFooter>
-                        </Dialog> */}
+                            {
+                                myRating !== rating ?
+                                <DefaultButton onClick={rate}>Send</DefaultButton>
+                                : null
+                            }
+                            <DefaultButton onClick={()=>setIsRating(false)}>Cancel</DefaultButton>
+                        </Stack>
                     </>
                     :
                     <DefaultButton title='Rate' onClick={()=>setIsRating(true)}>Rate</DefaultButton>

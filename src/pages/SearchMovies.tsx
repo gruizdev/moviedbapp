@@ -12,7 +12,7 @@ export const SearchMovies = () => {
     <div className='App'>
         <SearchBox
             placeholder='Search'
-            onSearch={query => { updateSearchQuery(query); searchMovies(); }} 
+            onSearch={query => { updateSearchQuery(query) }} 
         />
         <MoviesList movies={searchMoviesResult} />
         {

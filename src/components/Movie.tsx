@@ -2,10 +2,14 @@ import React from 'react';
 import styles from "./Movie.module.css";
 import { IMovie } from "../api/MovieDBApi";
 import { MovieDetails } from './MovieDetails';
+import { AppContext } from '../AppContext';
 
 const imageSize = 300;
 
 export const Movie = ({ movie }: { movie: IMovie }) => {
+
+  const { myRatings } = React.useContext(AppContext);
+  const myRating = myRatings.find(x => x.idMovie === movie.id)?.rating;
 
   const [detailsOpen, setDetailsOpen] = React.useState(false);
   return (
@@ -21,6 +25,7 @@ export const Movie = ({ movie }: { movie: IMovie }) => {
         {
           detailsOpen ? <MovieDetails movie={movie} closeModal={()=>setDetailsOpen(false)} /> : null
         }
+        { myRating || movie.rating ? <div className={styles.rating}><h1>{myRating || movie.rating}</h1></div> : null }
     </li>
     
   );

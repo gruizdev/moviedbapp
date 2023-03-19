@@ -2,7 +2,8 @@ import React, { createContext, useReducer, useContext, ReactElement } from "reac
 import { IMovie, IMoviesResult, MovieDBApi } from './api/MovieDBApi';
 
 import { AppReducer, ACTIONS } from "./AppReducer";
-import { FetchNextPageOptions, InfiniteQueryObserverResult, useInfiniteQuery } from "react-query";
+import { FetchNextPageOptions, InfiniteQueryObserverResult, useInfiniteQuery, useQuery } from "react-query";
+import Cookies from 'js-cookie';
 
 export interface IAppState {
     popularMovies: IMovie[];
@@ -31,6 +32,7 @@ export interface IAppContext extends IAppState {
     morePagesSearch: boolean | undefined;
     updateSearchQuery: (query: string) => void;
     rateMovie: (idMovie: number, rating: number) => void;
+    fetchRatedMovies: () => void
 }
 
 export const AppContext = createContext<IAppContext>(initialState as IAppContext);
@@ -71,7 +73,7 @@ export const AppProvider = ({children} : {children : React.ReactNode}) => {
             const result = await MovieDBApi.searchMovies(state.searchQuery, pageParam);
             dispatch({
                 type: ACTIONS.FETCHSEARCHMOVIES,
-                payload: {movies: state.searchMoviesResult.concat(result.results)}
+                payload: {movies: pageParam === 1 ? result.results : state.searchMoviesResult.concat(result.results)}
             });
             return result;
         }, 
@@ -89,23 +91,45 @@ export const AppProvider = ({children} : {children : React.ReactNode}) => {
             payload: {query: query}
         });
     }
+    
 
     const rateMovie = async (idMovie: number, rating: number) => {
 
-        let sessionId = state.guestSessionId;
-        if(!sessionId){
-            sessionId = await MovieDBApi.createGuestSession();
-            dispatch({
-                type: ACTIONS.CREATEGUESTSESSION,
-                payload: {sessionId: sessionId}
-            });
-        }
+        const sessionId = await createGuestSession();
 
         await MovieDBApi.rateMovie(idMovie, sessionId, rating);
 
         dispatch({
             type: ACTIONS.RATEMOVIE,
             payload: {idMovie: idMovie, rating: rating}
+        });               
+    }
+
+    const createGuestSession = async () : Promise<string> => {
+        const cookieSessionId = Cookies.get("MovieDB_sessionId");
+        if(cookieSessionId)
+            return Promise.resolve(cookieSessionId);
+        else {
+            const sessionId = await MovieDBApi.createGuestSession();
+
+            dispatch({
+                type: ACTIONS.CREATEGUESTSESSION,
+                payload: {sessionId: sessionId}
+            });
+
+            Cookies.set("MovieDB_sessionId", sessionId);
+
+            return sessionId;
+        }            
+    }
+
+    const getRatedMovies = async () => {
+        const sessionId = await createGuestSession();
+
+        const result = await MovieDBApi.getRatedMovies(sessionId);
+        dispatch({
+            type: ACTIONS.FETCHRATEDMOVIES,
+            payload: {movies: result.results}
         });
     }
 
@@ -123,7 +147,8 @@ export const AppProvider = ({children} : {children : React.ReactNode}) => {
         searchMovies: searchMovies,
         morePagesSearch: morePagesSearch,
         updateSearchQuery: updateSearchQuery,
-        rateMovie: rateMovie
+        rateMovie: rateMovie,
+        fetchRatedMovies: getRatedMovies
     };
     return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 

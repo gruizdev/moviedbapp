@@ -22,7 +22,7 @@ export const MovieDBApi = {
         const response = await fetch(`${baseUrl}/movie/${movieId}/rating?api_key=${apiKey}&guest_session_id=${sessionId}`, 
         {
             method: "POST",
-            headers: new Headers({"Content-Type": "string"}),
+            headers: new Headers({"Content-Type": "application/json;charset=utf-8"}),
             body: JSON.stringify({
                 value: rate
             }),
@@ -59,4 +59,5 @@ export interface IMovie {
     vote_count?: number;
     video?: boolean;
     vote_average?: number;
+    rating?: number;
 }

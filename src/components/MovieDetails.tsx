@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './MovieDetails.module.css';
-import { DefaultButton, Dialog, DialogFooter, Modal, PrimaryButton, Stack } from "@fluentui/react";
+import { DefaultButton, Modal, Stack } from "@fluentui/react";
 import { Rating, RatingSize } from "@fluentui/react/lib/Rating";
 import { IMovie } from "../api/MovieDBApi";
 import { AppContext } from '../AppContext';

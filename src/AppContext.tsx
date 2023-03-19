@@ -1,8 +1,8 @@
-import React, { createContext, useReducer, useContext, ReactElement } from "react";
+import React, { createContext, useReducer } from "react";
 import { IMovie, IMoviesResult, MovieDBApi } from './api/MovieDBApi';
 
 import { AppReducer, ACTIONS } from "./AppReducer";
-import { FetchNextPageOptions, InfiniteQueryObserverResult, useInfiniteQuery, useQuery } from "react-query";
+import { FetchNextPageOptions, InfiniteQueryObserverResult, useInfiniteQuery } from "react-query";
 import Cookies from 'js-cookie';
 
 export interface IAppState {

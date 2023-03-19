@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/moviedbapp/static/css/main.ac396316.css",
+    "main.js": "/moviedbapp/static/js/main.6270bc8d.js",
+    "static/js/787.db516ee7.chunk.js": "/moviedbapp/static/js/787.db516ee7.chunk.js",
+    "index.html": "/moviedbapp/index.html",
+    "main.ac396316.css.map": "/moviedbapp/static/css/main.ac396316.css.map",
+    "main.6270bc8d.js.map": "/moviedbapp/static/js/main.6270bc8d.js.map",
+    "787.db516ee7.chunk.js.map": "/moviedbapp/static/js/787.db516ee7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ac396316.css",
+    "static/js/main.6270bc8d.js"
+  ]
+}

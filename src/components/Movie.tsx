@@ -17,7 +17,10 @@ export const Movie = ({ movie }: { movie: IMovie }) => {
     <li key={movie.id} className={styles.movie} onClick={()=>setDetailsOpen(true)}>
         <img            
             className={styles.movieImage}
-            src={`https://image.tmdb.org/t/p/w${imageSize}${movie.poster_path}`}
+            src={movie.poster_path ? 
+              `https://image.tmdb.org/t/p/w${imageSize}${movie.poster_path}` :
+              'https://placeholder.pics/svg/230x345/DEDEDE/555555/No%20image'
+            }
             alt={movie.title}
             width={230}
             height={345}

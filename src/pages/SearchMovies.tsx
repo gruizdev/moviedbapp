@@ -12,7 +12,8 @@ export const SearchMovies = () => {
     <div className='App'>
         <SearchBox
             placeholder='Search'
-            onSearch={query => { updateSearchQuery(query) }} 
+            onSearch={query => { updateSearchQuery(query) }}
+            styles={{root: {width: "60%", marginLeft:"auto", marginRight:"auto"}}}             
         />
         <MoviesList movies={searchMoviesResult} />
         {

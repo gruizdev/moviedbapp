@@ -1,5 +1,5 @@
 const baseUrl = "https://api.themoviedb.org/3";
-const apiKey = "8f781d70654b5a6f2fa69770d1d115a3";
+const apiKey = process.env.REACT_APP_API_KEY;
 
 export const MovieDBApi = {
     getPopularMovies : async ({ pageParam = 1 }) : Promise<IMoviesResult> => {

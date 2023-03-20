@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './MovieDetails.module.css';
-import { DefaultButton, Modal, Stack } from "@fluentui/react";
+import { DefaultButton, IconButton, Modal, Stack } from "@fluentui/react";
 import { Rating, RatingSize } from "@fluentui/react/lib/Rating";
 import { IMovie } from "../api/MovieDBApi";
 import { AppContext } from '../AppContext';
@@ -30,9 +30,17 @@ export const MovieDetails = ({movie, closeModal}:{movie:IMovie, closeModal:()=>v
             isBlocking={false}
             onDismiss={closeModal}
             containerClassName={styles.container}
-        >
+        >            
             <div className={styles.details}>
-                <h2>{movie.title}</h2>
+                <div className={styles.modalHeader}>
+                    <h2>{movie.title}</h2>
+                    <IconButton
+                        styles={{root:{marginLeft:'auto', marginRight: '2px'}}}
+                        iconProps={{iconName: "Cancel"}}
+                        ariaLabel="Close popup modal"
+                        onClick={closeModal}
+                    />
+                </div>
                 <p>{movie.overview}</p>
                 {
                     isRating ? 

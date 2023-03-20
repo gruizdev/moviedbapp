@@ -6,3 +6,16 @@
 .container {
     max-width: 60%;
 }
+
+.modalHeader {
+    display: flex;
+    flex: 1 1 auto;
+    /* border-top: 4px solid; */
+    align-items: center;
+    font-weight: bold;
+    /* padding: 12px 12px 14px 24px;     */
+}
+
+.modalHeader h2 {
+    margin-left: auto;
+}

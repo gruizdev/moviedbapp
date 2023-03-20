@@ -1,9 +1,9 @@
-import { IMovie } from './api/MovieDBApi';
+import { IGenre, IMovie } from './api/MovieDBApi';
 import { IAppState } from './AppContext';
 
 export interface IAppAction {
     type: string;
-    payload: IFetchMoviesPayload | ICreateGuestSessionPayload | ISearchPayload | IRateMoviePayload;
+    payload: IFetchMoviesPayload | ICreateGuestSessionPayload | ISearchPayload | IRateMoviePayload | IFetchGenresPayload;
 }
 
 export interface IFetchMoviesPayload {
@@ -21,6 +21,10 @@ export interface ISearchPayload {
 export interface IRateMoviePayload {
     idMovie: number;
     rating: number;
+}
+
+export interface IFetchGenresPayload {
+    genres: IGenre[];
 }
 
 export const AppReducer = (state: IAppState, action: IAppAction) : IAppState => {
@@ -42,6 +46,8 @@ export const AppReducer = (state: IAppState, action: IAppAction) : IAppState => 
                 {idMovie: payload.idMovie, rating: payload.rating}
             ];
             return {...state, myRatings: ratings};
+        case ACTIONS.FETCHGENRES:
+            return {...state, genres: (action.payload as IFetchGenresPayload).genres }
         default:
             return state;            
     }
@@ -53,5 +59,6 @@ export const ACTIONS = {
     CREATEGUESTSESSION: 'CREATEGUESTSESSION',
     SEARCHMOVIE: 'SEARCHMOVIE',
     FETCHSEARCHMOVIES: 'FETCHSEARCHMOVIES',
-    RATEMOVIE: 'RATEMOVIE'
+    RATEMOVIE: 'RATEMOVIE',
+    FETCHGENRES: 'FETCHGENRES'
 }

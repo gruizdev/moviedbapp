@@ -8,11 +8,11 @@ import { AppContext } from '../AppContext';
 
 export const MovieDetails = ({movie, closeModal}:{movie:IMovie, closeModal:()=>void}) => {
 
-    const { myRatings, rateMovie } = React.useContext(AppContext);
+    const { myRatings, rateMovie, genres } = React.useContext(AppContext);
     const myRating = myRatings.find(x => x.idMovie === movie.id)?.rating;
 
     const [isRating, setIsRating] = React.useState(false);
-    const [rating, setRating] = React.useState<number | undefined>(myRating);
+    const [rating, setRating] = React.useState<number | undefined>(myRating || movie.rating);
 
 
     const rate = async () => {
@@ -41,7 +41,13 @@ export const MovieDetails = ({movie, closeModal}:{movie:IMovie, closeModal:()=>v
                         onClick={closeModal}
                     />
                 </div>
+                <span>Overview</span>
                 <p>{movie.overview}</p>
+                <span>Genres</span>
+                <p>{movie.genre_ids?.map(x => genres.find(g => g.id === x)?.name).join(", ")}</p>
+                <span>Average vote</span>
+                <p>{movie.vote_average}</p>                
+                <div style={{textAlign: "center"}}>
                 {
                     isRating ? 
                     <>
@@ -69,6 +75,7 @@ export const MovieDetails = ({movie, closeModal}:{movie:IMovie, closeModal:()=>v
                     :
                     <DefaultButton title='Rate' onClick={()=>setIsRating(true)}>Rate</DefaultButton>
                 }
+                </div>
                 
             </div>
 

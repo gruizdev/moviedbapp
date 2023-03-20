@@ -1,6 +1,6 @@
 .details {
     padding: 10px;
-    text-align: center;
+    /* text-align: center; */
 }
 
 .container {
@@ -12,10 +12,15 @@
     flex: 1 1 auto;
     /* border-top: 4px solid; */
     align-items: center;
+    justify-content: center;
     font-weight: bold;
     /* padding: 12px 12px 14px 24px;     */
 }
 
 .modalHeader h2 {
     margin-left: auto;
+}
+
+.details span {
+    font-weight: bold;
 }

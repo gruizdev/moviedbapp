@@ -3,6 +3,7 @@ import styles from "./Movie.module.css";
 import { IMovie } from "../api/MovieDBApi";
 import { MovieDetails } from './MovieDetails';
 import { AppContext } from '../AppContext';
+import dayjs from 'dayjs';
 
 const imageSize = 300;
 
@@ -22,10 +23,11 @@ export const Movie = ({ movie }: { movie: IMovie }) => {
             height={345}
         />
         <div>{movie.title}</div>
+        <div className={styles.subTitle}>{dayjs(movie.release_date).format('DD/MM/YYYY')}</div>
         {
           detailsOpen ? <MovieDetails movie={movie} closeModal={()=>setDetailsOpen(false)} /> : null
         }
-        { myRating || movie.rating ? <div className={styles.rating}><h1>{myRating || movie.rating}</h1></div> : null }
+        {/* { myRating || movie.rating ? <div className={styles.rating}><h1>{myRating || movie.rating}</h1></div> : null } */}
     </li>
     
   );

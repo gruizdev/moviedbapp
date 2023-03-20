@@ -13,6 +13,10 @@
     border-radius: 10px;
     background-color: azure;
   }
+
+  .subTitle {
+    font-size: 1rem;
+  }
   
   @media (max-width: 560px) {
     .movieImage {

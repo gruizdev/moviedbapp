@@ -1,8 +1,8 @@
 import React, { createContext, useReducer } from "react";
-import { IMovie, IMoviesResult, MovieDBApi } from './api/MovieDBApi';
+import { IGenre, IMovie, IMoviesResult, MovieDBApi } from './api/MovieDBApi';
 
 import { AppReducer, ACTIONS } from "./AppReducer";
-import { FetchNextPageOptions, InfiniteQueryObserverResult, useInfiniteQuery } from "react-query";
+import { FetchNextPageOptions, InfiniteQueryObserverResult, useInfiniteQuery, useQuery } from "react-query";
 import Cookies from 'js-cookie';
 
 export interface IAppState {
@@ -12,6 +12,7 @@ export interface IAppState {
     guestSessionId: string;
     myRatings: {idMovie: number, rating: number}[];
     ratedMovies: IMovie[];
+    genres: IGenre[];
 }
 
 export const initialState : IAppState = {
@@ -20,7 +21,8 @@ export const initialState : IAppState = {
     searchMoviesResult: [],
     guestSessionId: "",
     myRatings: [],
-    ratedMovies: []    
+    ratedMovies: [],
+    genres: []  
 };
 
 export interface IAppContext extends IAppState {
@@ -91,6 +93,15 @@ export const AppProvider = ({children} : {children : React.ReactNode}) => {
             payload: {query: query}
         });
     }
+
+    useQuery(["genres"], MovieDBApi.getGenres,{
+        onSuccess: (genres) => {
+            dispatch({
+                type: ACTIONS.FETCHGENRES,
+                payload: {genres: genres}
+            });
+        }
+    });
     
 
     const rateMovie = async (idMovie: number, rating: number) => {
@@ -140,6 +151,7 @@ export const AppProvider = ({children} : {children : React.ReactNode}) => {
         guestSessionId: state.guestSessionId,
         myRatings: state.myRatings,
         ratedMovies: state.ratedMovies,
+        genres: state.genres,
         fetchPopularMovies: fetchPopularMovies,
         isFetchingPopular: isFetchingPopular,
         morePagesPopular: morePagesPopular,

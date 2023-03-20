@@ -33,6 +33,11 @@ export const MovieDBApi = {
     getRatedMovies :async (sessionId:string) : Promise<IMoviesResult> => {
         const response = await fetch(`${baseUrl}/guest_session/${sessionId}/rated/movies?api_key=${apiKey}`);
         return await response.json() as Promise<IMoviesResult>;        
+    },
+    getGenres : async () : Promise<IGenre[]> => {
+        const response = await fetch(`${baseUrl}/genre/movie/list?api_key=${apiKey}`);
+        const result = await response.json() as {genres: IGenre[]};
+        return result.genres
     }
 
 };
@@ -60,4 +65,9 @@ export interface IMovie {
     video?: boolean;
     vote_average?: number;
     rating?: number;
+}
+
+export interface IGenre {
+    id: number;
+    name: string;
 }
